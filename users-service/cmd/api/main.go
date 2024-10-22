@@ -2,7 +2,10 @@ package main
 
 import (
 	"users-service/internal/infrastructure/config"
+	"users-service/internal/infrastructure/database"
+	"users-service/internal/infrastructure/database/repository"
 	"users-service/internal/infrastructure/web"
+	"users-service/internal/usecase"
 	"users-service/pkg"
 
 	"go.uber.org/zap"
@@ -16,7 +19,16 @@ func main() {
 
 	pkg.InitLogger(configs.Env)
 
-	handlers := web.NewUserHandlers()
+	db, err := database.Connect(configs.DBHost, configs.DBUser, configs.DBPassword, configs.DBName, configs.DBPort)
+	if err != nil {
+		panic(err)
+	}
+
+	userRepository := repository.NewUserRepository(db)
+
+	createUserUseCase := usecase.NewCreateUser(userRepository)
+
+	handlers := web.NewUserHandlers(*createUserUseCase)
 
 	webserver := web.NewWebServer(configs.WebServerPort, handlers)
 

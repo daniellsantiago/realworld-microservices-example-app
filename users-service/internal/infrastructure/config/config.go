@@ -5,6 +5,11 @@ import "github.com/spf13/viper"
 type Conf struct {
 	WebServerPort string `mapstructure:"WEB_SERVER_PORT"`
 	Env           string `mapstructure:"ENV"`
+	DBHost        string `mapstructure:"DB_HOST"`
+	DBPort        string `mapstructure:"DB_PORT"`
+	DBUser        string `mapstructure:"DB_USER"`
+	DBPassword    string `mapstructure:"DB_PASSWORD"`
+	DBName        string `mapstructure:"DB_NAME"`
 }
 
 func LoadConfig(path string) (*Conf, error) {
