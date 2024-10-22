@@ -1,8 +1,6 @@
 package web
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,12 +12,12 @@ type Server struct {
 
 func NewWebServer(serverPort string, handlers UserHandlers) *Server {
 	return &Server{
-		Router:        gin.Default(),
+		Router:        gin.New(),
 		Handlers:      handlers,
 		WebServerPort: serverPort,
 	}
 }
 
 func (s *Server) Start() error {
-	return http.ListenAndServe(s.WebServerPort, s.Router)
+	return s.Router.Run(s.WebServerPort)
 }

@@ -4,6 +4,7 @@ import "github.com/spf13/viper"
 
 type Conf struct {
 	WebServerPort string `mapstructure:"WEB_SERVER_PORT"`
+	Env           string `mapstructure:"ENV"`
 }
 
 func LoadConfig(path string) (*Conf, error) {
