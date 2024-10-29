@@ -1,18 +1,23 @@
 package usecase
 
 import (
+	"fmt"
 	"users-service/internal/entity"
+	"users-service/internal/service"
+	"users-service/pkg"
 
 	"github.com/google/uuid"
 )
 
 type CreateUser struct {
 	UserRepository entity.UserRepository
+	JwtService     service.JwtService
 }
 
-func NewCreateUser(userRepository entity.UserRepository) *CreateUser {
+func NewCreateUser(userRepository entity.UserRepository, jwtService service.JwtService) *CreateUser {
 	return &CreateUser{
 		UserRepository: userRepository,
+		JwtService:     jwtService,
 	}
 }
 
@@ -27,13 +32,18 @@ func (c *CreateUser) Execute(createDTO CreateUserInputDTO) (CreateUserOutputDTO,
 		return CreateUserOutputDTO{}, err
 	}
 
+	token, err := c.JwtService.GenerateToken(user.ID)
+	if err != nil {
+		return CreateUserOutputDTO{}, fmt.Errorf("failed to generate token. error_type: %w", pkg.ErrInternal)
+	}
+
 	return CreateUserOutputDTO{
 		User: UserOutputDTO{
 			Username: user.Username,
 			Email:    user.Email,
 			Image:    user.Image,
 			Bio:      user.Bio,
-			Token:    "",
+			Token:    token,
 		},
 	}, nil
 }

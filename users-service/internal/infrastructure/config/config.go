@@ -10,6 +10,7 @@ type Conf struct {
 	DBUser        string `mapstructure:"DB_USER"`
 	DBPassword    string `mapstructure:"DB_PASSWORD"`
 	DBName        string `mapstructure:"DB_NAME"`
+	JwtSecret     string `mapstructure:"JWT_SECRET"`
 }
 
 func LoadConfig(path string) (*Conf, error) {

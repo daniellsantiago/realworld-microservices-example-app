@@ -1,7 +1,9 @@
 package entity
 
 import (
-	"errors"
+	"crypto/sha256"
+	"fmt"
+	"users-service/pkg"
 
 	"github.com/google/uuid"
 )
@@ -30,25 +32,31 @@ func NewUser(id uuid.UUID, email, username, password, image, bio string) (*User,
 		return nil, err
 	}
 
+	user.encryptPassword()
+
 	return user, nil
 }
 
 func (u *User) IsValid() error {
 	if u.ID == uuid.Nil {
-		return errors.New("invalid id")
+		return fmt.Errorf("invalid id. error_type: %w", pkg.ErrValidation)
 	}
 
 	if u.Email == "" {
-		return errors.New("invalid email")
+		return fmt.Errorf("invalid email. error_type: %w", pkg.ErrValidation)
 	}
 
 	if u.Username == "" {
-		return errors.New("invalid username")
+		return fmt.Errorf("invalid username. error_type: %w", pkg.ErrValidation)
 	}
 
 	if u.Password == "" {
-		return errors.New("invalid password")
+		return fmt.Errorf("invalid password. error_type: %w", pkg.ErrValidation)
 	}
 
 	return nil
+}
+
+func (u *User) encryptPassword() {
+	u.Password = fmt.Sprintf("%x", sha256.Sum256([]byte(u.Password)))
 }
