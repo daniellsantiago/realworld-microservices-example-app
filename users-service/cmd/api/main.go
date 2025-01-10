@@ -31,7 +31,7 @@ func main() {
 
 	createUserUseCase := usecase.NewCreateUser(userRepository, jwtService)
 
-	handlers := web.NewUserHandlers(*createUserUseCase)
+	handlers := web.NewUserHandlers(createUserUseCase)
 
 	webserver := web.NewWebServer(configs.WebServerPort, handlers)
 

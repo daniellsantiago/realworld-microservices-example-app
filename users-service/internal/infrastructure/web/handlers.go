@@ -22,14 +22,14 @@ func NewUserHandlers(createUserUseCase usecase.CreateUser) UserHandlers {
 }
 
 func (h userHandlers) CreateUser(c *gin.Context) {
-	var input *usecase.CreateUserInputDTO
+	var input usecase.CreateUserInputDTO
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	userOutputDTO, err := h.createUserUseCase.Execute(*input)
+	userOutputDTO, err := h.createUserUseCase.Execute(input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

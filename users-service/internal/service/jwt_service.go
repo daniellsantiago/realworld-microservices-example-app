@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
+//go:generate go run go.uber.org/mock/mockgen -destination mock_service/jwt_service.go . JwtService
 type JwtService interface {
 	GenerateToken(id uuid.UUID) (string, error)
 	ValidateToken(token string) bool

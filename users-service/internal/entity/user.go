@@ -17,7 +17,7 @@ type User struct {
 	Bio      string
 }
 
-func NewUser(id uuid.UUID, email, username, password, image, bio string) (*User, error) {
+func CreateUser(id uuid.UUID, email, username, password, image, bio string) (*User, error) {
 	user := &User{
 		ID:       id,
 		Email:    email,
@@ -27,7 +27,7 @@ func NewUser(id uuid.UUID, email, username, password, image, bio string) (*User,
 		Bio:      bio,
 	}
 
-	err := user.IsValid()
+	err := user.isValid()
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func NewUser(id uuid.UUID, email, username, password, image, bio string) (*User,
 	return user, nil
 }
 
-func (u *User) IsValid() error {
+func (u *User) isValid() error {
 	if u.ID == uuid.Nil {
 		return fmt.Errorf("invalid id. error_type: %w", pkg.ErrValidation)
 	}
@@ -50,7 +50,7 @@ func (u *User) IsValid() error {
 		return fmt.Errorf("invalid username. error_type: %w", pkg.ErrValidation)
 	}
 
-	if u.Password == "" {
+	if u.Password == "" || len(u.Password) < 8 {
 		return fmt.Errorf("invalid password. error_type: %w", pkg.ErrValidation)
 	}
 

@@ -14,15 +14,16 @@ type CreateUser struct {
 	JwtService     service.JwtService
 }
 
-func NewCreateUser(userRepository entity.UserRepository, jwtService service.JwtService) *CreateUser {
-	return &CreateUser{
+func NewCreateUser(userRepository entity.UserRepository, jwtService service.JwtService) CreateUser {
+	return CreateUser{
 		UserRepository: userRepository,
 		JwtService:     jwtService,
 	}
 }
 
 func (c *CreateUser) Execute(createDTO CreateUserInputDTO) (CreateUserOutputDTO, error) {
-	user, err := entity.NewUser(uuid.New(), createDTO.User.Email, createDTO.User.Username, createDTO.User.Password, "", "")
+	user, err := entity.CreateUser(uuid.New(), createDTO.User.Email, createDTO.User.Username, createDTO.User.Password,
+		createDTO.User.Image, createDTO.User.Bio)
 	if err != nil {
 		return CreateUserOutputDTO{}, err
 	}
@@ -56,6 +57,8 @@ type UserInputDTO struct {
 	Username string `json:"username" binding:"required"`
 	Email    string `json:"email"  binding:"required"`
 	Password string `json:"password"  binding:"required"`
+	Image    string `json:"image"`
+	Bio      string `json:"bio"`
 }
 
 type CreateUserOutputDTO struct {
