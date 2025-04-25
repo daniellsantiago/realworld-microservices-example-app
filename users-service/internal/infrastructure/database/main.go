@@ -11,12 +11,14 @@ import (
 )
 
 func Connect(host, user, password, dbname, port string) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/Sao_Paulo",
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require TimeZone=America/Sao_Paulo",
 		host, user, password, dbname, port)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		pkg.Logger.Error("Failed to connect to database", zap.Error(err))
+		maskedDsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require TimeZone=America/Sao_Paulo",
+			host, user, password, dbname, port)
+		pkg.Logger.Error("Failed to connect to database", zap.Error(err), zap.String("dsn", maskedDsn))
 		return nil, err
 	}
 
