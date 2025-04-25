@@ -16,9 +16,7 @@ func Connect(host, user, password, dbname, port string) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		maskedDsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require TimeZone=America/Sao_Paulo",
-			host, user, password, dbname, port)
-		pkg.Logger.Error("Failed to connect to database", zap.Error(err), zap.String("dsn", maskedDsn))
+		pkg.Logger.Error("Failed to connect to database", zap.Error(err))
 		return nil, err
 	}
 
